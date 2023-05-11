@@ -1,0 +1,165 @@
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HodlInfo</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <header>
+      <div class="logo">HODLINFO</div>
+      <div class="currency-select">
+        <select id="quoteDropdown">
+          <option value="INR">INR</option>
+        </select>
+        <select id="currencyDropdown">
+          <option value="BTC">BTC</option>
+          <option value="XRP">XRP</option>
+          <option value="TRX">TRX</option>
+          <option value="EOS">EOS</option>
+          <option value="ZIL">ZIL</option>
+          <option value="BAT">BAT</option>
+          <option value="ZRX">ZRX</option>
+          <option value="NULS">NULS</option>
+          <option value="REQ">REQ</option>
+          <option value="ETH">ETH</option>
+        </select>
+        <a href="https://wazirx.com/invite/sp7pvbt6?utm_source=finstreet&utm_medium=affiliate&utm_campaign=regnow-btn">
+          <button id="buyButton">Buy BTC</button>
+        </a>
+      </div>
+      <div class="dark-mode-switch">
+        <input type="checkbox" id="darkModeSwitch">
+        <label for="darkModeSwitch"></label>
+      </div>
+    </header>
+   <section class="middle">
+      <h1 class="average" >Best Price to Trade</h1>
+      <br>
+      <h3 class="average-price">₹ <span id="averagePrice"></span></h3>
+      <br>
+      <h1 class="commission">Average <span id="currencyLabel"></span>/INR net price including commission</h1>
+
+   </section>
+    <main>
+      <div class="data-table">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Platform</th>
+              <th>Last Traded Price</th>
+              <th>Buy / Sell Price</th>
+              <th>Difference</th>
+              <th>Savings</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Data fetched from the database and populated dynamically -->
+          </tbody>
+        </table>
+      </div>
+    </main>
+    <script>
+      const dropdown = document.getElementById('currencyDropdown');
+      let unit = dropdown.value; // Get the initial selected value
+      dropdown.addEventListener('change', (event) => {
+        unit = event.target.value; // Update the unit value based on the selected option
+        console.log(unit)
+        updateBuyButton();
+        fetchData();
+      });
+
+      function calculateAveragePrice(data) {
+        let totalBuyPrice = 0;
+        data.forEach(item => {
+          totalBuyPrice += parseFloat(item.buy);
+        });
+        const averagePrice = totalBuyPrice / data.length;
+        return averagePrice.toFixed(2);
+      }
+
+      function updateAveragePrice(data) {
+        const averagePrice = calculateAveragePrice(data);
+        const averagePriceElement = document.getElementById('averagePrice');
+        averagePriceElement.textContent = averagePrice;
+      }
+      function updatecommission(){
+        const c = document.getElementById('currencyLabel');
+        c.textContent = unit;
+      }
+
+      function updateBuyButton() {
+        buyButton.textContent = `Buy ${unit}`;
+      }
+      
+
+      function fetchData() {
+        fetch(`http://localhost:5000/api/v2/${unit}`)
+          .then(response => response.json())
+          .then(data => {
+            console.log(data);
+      
+            const tableBody = document.querySelector('.data-table tbody');
+            tableBody.innerHTML = '';
+            let num = 0;
+            data.forEach(item => {
+              const { name, last, buy, sell, volume, base_unit } = item;
+              const difference = ((sell - buy) * 100) / buy + ' %';
+              const platform = "WazirX";
+              const saving = sell - buy;
+      
+              // Create a new cell for savings
+              const savingCell = document.createElement('td');
+              savingCell.id = 'saving-' + num;
+              savingCell.textContent = saving;
+      
+              // Create a new cell for the difference
+              const differenceCell = document.createElement('td');
+              differenceCell.textContent = difference;
+      
+              // Check if saving is greater than 0 and update the cell color accordingly
+              if (saving > 0) {
+                savingCell.style.color = 'green';
+                differenceCell.style.color = 'green';
+              } else {
+                savingCell.style.color = 'red';
+                differenceCell.style.color = 'red';
+              }
+      
+              num++;
+              const row = `
+                <tr>
+                  <td>${num}</td>
+                  <td>${platform}</td>
+                  <td>₹ ${last}</td>
+                  <td>₹ ${buy}/₹ ${sell}</td>
+                </tr>
+              `;
+              tableBody.innerHTML += row;
+      
+              // Append the saving cell to the row
+              const rowElement = document.querySelector('.data-table tbody tr:last-child');
+              rowElement.appendChild(differenceCell);
+              rowElement.appendChild(savingCell);
+              
+            });
+            updateAveragePrice(data);
+            updatecommission();
+          })
+          .catch(error => {
+            // Handle any errors that occurred during the request
+            console.error('Error fetching data:', error);
+          });
+      }
+      
+
+      // Initial fetch when the page loads
+      fetchData();
+    </script> 
+  </body>
+  </html>

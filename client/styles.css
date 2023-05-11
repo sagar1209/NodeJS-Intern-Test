@@ -1,0 +1,136 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+  }
+  
+  body {
+    font-family: Arial, sans-serif;
+  }
+  
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background-color: #f0f0f0;
+  }
+  
+  .logo {
+    font-size: 24px;
+    font-weight: bold;
+  }
+  
+  .currency-select {
+    display: flex;
+    align-items: center;
+    margin: 0px auto;
+    transform: translateX(-25%);
+  }
+  
+  .currency-select select {
+    margin-right: 10px;
+    padding: 5px;
+  }
+  .dark-mode-switch {
+    position: relative;
+  }
+  
+  .dark-mode-switch input[type="checkbox"] {
+    display: none;
+  }
+  
+  .dark-mode-switch label {
+    position: absolute;
+    top: 2px;
+    left: -20px;
+    width: 40px;
+    height: 20px;
+    background-color: #ccc;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+  
+  .dark-mode-switch label:after {
+    content: "";
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 16px;
+    height: 16px;
+    background-color: #fff;
+    border-radius: 50%;
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .dark-mode-switch input[type="checkbox"]:checked + label {
+    background-color: #666;
+  }
+  
+  .dark-mode-switch input[type="checkbox"]:checked + label:after {
+    transform: translateX(20px);
+  }
+  
+  main {
+    padding: 20px;
+  }
+  
+  .data-table{
+    margin:10px 0px !important;
+
+  }
+  .data-table table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .data-table th{
+    margin:100px 0px !important;
+  }
+  .data-table td {
+    text-align: center;
+    
+   
+  }
+
+  #buyButton{
+    cursor: pointer;
+  }
+
+.middle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+  background-color: #b9b6b6;
+}
+
+.average-price {
+  margin-top: auto;
+  text-align: center;
+  font-size: 60px;
+}
+
+.average{
+  letter-spacing: 2px;
+}
+
+.data-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+ .data-table td {
+  padding: 8px;
+  text-align: left;
+  border: 1px solid #ddd;
+}
+
+
+.data-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.commission{
+  font-size: 12px;
+}
